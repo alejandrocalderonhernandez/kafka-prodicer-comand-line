@@ -1,4 +1,3 @@
-package com.debuggeandoideas;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -6,29 +5,30 @@ import org.apache.logging.log4j.Logger;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
-public class Main {
+public class App {
+
     public static void main(String[] args) {
-        System.setProperty("log4j.configurationFile","./path_to_the_log4j2_config_file/log4j2.xml");
 
         var kafkaProducer = Producer.getInstance();
-
         var scanner = new Scanner(System.in);
+
         do {
             var line = scanner.next();
             var isValidLine = validFormat(line);
+
             if (isValidLine || line.equals("exit")) {
                 if (line.equals("exit")) {
-                    log.info("Finish");
-                    kafkaProducer.closeProducer();
+                    log.info("Finishing");
+                    kafkaProducer.close();
                     break;
                 }
                 var keyAndMessage = line.split(":");
                 kafkaProducer.send(keyAndMessage[0], keyAndMessage[1]);
             } else {
-                log.error("The formant must be string:string");
+                log.error("The format must be string:string");
             }
-        } while (true);
 
+        } while (true);
     }
 
     private static Boolean validFormat(String line) {
@@ -37,6 +37,6 @@ public class Main {
         return matcher.matches();
     }
 
-    private static final Logger log = LogManager.getLogger(Main.class);
+    private static final Logger log = LogManager.getLogger(App.class);
 
 }
