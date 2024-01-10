@@ -19,6 +19,9 @@ public class Producer {
         try {
             var conf = new Properties();
             conf.load(new FileReader("src/main/resources/producer.properties"));
+            
+            this.kafkaProducer = new KafkaProducer<>(conf);
+            
         } catch (IOException ioe) {
             log.error(ioe.getMessage());
         }
